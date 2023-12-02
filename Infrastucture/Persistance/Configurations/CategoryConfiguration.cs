@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Persistance.Configurations;
 
-public class CateegoryConfiguration : IEntityTypeConfiguration<Category>
+public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {

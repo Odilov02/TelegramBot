@@ -10,8 +10,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(x => x.PhoneNumber).IsUnique();
 
         builder.Property(x => x.Name).IsRequired().HasMaxLength(500);
-
-        builder.Property(x => x.BasketId).IsRequired();
-
     }
 }
