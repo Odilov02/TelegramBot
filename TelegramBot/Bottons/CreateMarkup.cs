@@ -2,9 +2,9 @@
 {
     public class CreateMarkup
     {
-        public static void PassMenuMarkup(ITelegramBotClient botClient, Update update)
+        public static ReplyKeyboardMarkup PassMenuMarkup(ITelegramBotClient botClient, Update update)
         {
-            ReplyKeyboardMarkup replyKeyboardMarkup = new(
+            ReplyKeyboardMarkup markup = new(
                                                          new[]
                                                          {
                                                       new KeyboardButton[] { "🛍 Buyurtma berish" },
@@ -14,10 +14,7 @@
             {
                 ResizeKeyboard = true
             };
-            botClient.SendTextMessageAsync(chatId: update.Message!.Chat.Id,
-                                               text: "Qanday Amal Bajarmoqchisiz!",
-                                               replyMarkup: replyKeyboardMarkup
-                                               );
+            return markup;
         }
     }
 }
