@@ -5,12 +5,12 @@
         public static ReplyKeyboardMarkup PassMenuMarkup(ITelegramBotClient botClient, Update update)
         {
             ReplyKeyboardMarkup markup = new(
-                                                         new[]
-                                                         {
+                                              new[]
+                                              {
                                                       new KeyboardButton[] { "🛍 Buyurtma berish" },
                                                       new KeyboardButton[] { "✍️ Fikr bildirish" },
                                                       new KeyboardButton[] { "ℹ️ Ma'lumot" },
-                                                         })
+                                               })
             {
                 ResizeKeyboard = true
             };
