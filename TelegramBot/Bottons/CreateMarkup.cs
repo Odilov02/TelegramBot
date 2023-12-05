@@ -5,9 +5,9 @@ namespace TelegramBot.Bottons;
 
 public class CreateMarkup
 {
-    public static ICategoryService? _categoryService;
-    public static IFoodService? _foodService;
-    public CreateMarkup(ICategoryService categoryService,IFoodService foodService)
+    public readonly ICategoryService? _categoryService;
+    public readonly IFoodService? _foodService;
+    public CreateMarkup(ICategoryService categoryService, IFoodService foodService)
     {
         _categoryService = categoryService;
         _foodService = foodService;
@@ -104,7 +104,7 @@ public class CreateMarkup
         };
         return markup;
     }
-    public static ReplyKeyboardMarkup GetAllCategory()
+    public  ReplyKeyboardMarkup GetAllCategory()
     {
         List<Category> categories = _categoryService!.GetAll().Result;
 
@@ -128,7 +128,7 @@ public class CreateMarkup
         };
         return markup;
     }
-    public static ReplyKeyboardMarkup GetAllFood()
+    public ReplyKeyboardMarkup GetAllFood()
     {
         List<Food> foods = _foodService!.GetAll().Result;
 

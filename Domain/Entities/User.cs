@@ -6,9 +6,7 @@ public class User
     public string Name { get; set; }
     public string PhoneNumber { get; set; }
     public string ChatId { get; set; }
-    public virtual ICollection<Order> Orders { get; set; }
     public virtual Basket Basket { get; set; }
-
     public Guid StateUserId { get; set; }
     public virtual StateUser StateUser { get; set; }
 }

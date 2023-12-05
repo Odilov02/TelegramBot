@@ -8,8 +8,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.Property(x => x.UserId).IsRequired();
 
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
-
         builder.Property(x => x.Description).IsRequired().HasMaxLength(200);
 
     }

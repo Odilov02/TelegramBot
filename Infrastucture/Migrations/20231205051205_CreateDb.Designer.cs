@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231203034537_createDb")]
-    partial class createDb
+    [Migration("20231205051205_CreateDb")]
+    partial class CreateDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,31 +28,21 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BasketFood", b =>
-                {
-                    b.Property<Guid>("BasketsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FoodsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("BasketsId", "FoodsId");
-
-                    b.HasIndex("FoodsId");
-
-                    b.ToTable("BasketFood");
-                });
-
             modelBuilder.Entity("Domain.Entities.Basket", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("FoodId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FoodId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -79,6 +69,26 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("20c0a028-9135-4557-b787-f906784170dc"),
+                            Description = "faqat Baliqli taomlar",
+                            Name = "Baliq"
+                        },
+                        new
+                        {
+                            Id = new Guid("e6ffdeb7-ba99-4037-b0d2-08a566b970eb"),
+                            Description = "faqat Donar taomlar",
+                            Name = "Donar"
+                        },
+                        new
+                        {
+                            Id = new Guid("af2493ec-9a24-4486-9ce6-56534ca62650"),
+                            Description = "faqat Pizza taomlar",
+                            Name = "Pizza"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Food", b =>
@@ -120,6 +130,9 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BasketId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
@@ -128,18 +141,26 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<Guid?>("FoodId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsDeliver")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("State")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BasketId");
+
+                    b.HasIndex("FoodId");
 
                     b.HasIndex("UserId");
 
@@ -193,23 +214,12 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BasketFood", b =>
-                {
-                    b.HasOne("Domain.Entities.Basket", null)
-                        .WithMany()
-                        .HasForeignKey("BasketsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Food", null)
-                        .WithMany()
-                        .HasForeignKey("FoodsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Entities.Basket", b =>
                 {
+                    b.HasOne("Domain.Entities.Food", null)
+                        .WithMany("Baskets")
+                        .HasForeignKey("FoodId");
+
                     b.HasOne("Domain.Entities.User", "User")
                         .WithOne("Basket")
                         .HasForeignKey("Domain.Entities.Basket", "UserId");
@@ -230,11 +240,21 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Order", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "User")
+                    b.HasOne("Domain.Entities.Basket", null)
                         .WithMany("Orders")
+                        .HasForeignKey("BasketId");
+
+                    b.HasOne("Domain.Entities.Food", "Food")
+                        .WithMany()
+                        .HasForeignKey("FoodId");
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Food");
 
                     b.Navigation("User");
                 });
@@ -250,9 +270,19 @@ namespace Infrastructure.Migrations
                     b.Navigation("StateUser");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Basket", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
                     b.Navigation("Foods");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Food", b =>
+                {
+                    b.Navigation("Baskets");
                 });
 
             modelBuilder.Entity("Domain.Entities.StateUser", b =>
@@ -263,8 +293,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Navigation("Basket");
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

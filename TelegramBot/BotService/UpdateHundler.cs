@@ -1,4 +1,6 @@
-﻿using Telegram.Bot.Polling;
+﻿using Infrastructure.Persistance;
+using Infrastructure.Persistance.Services;
+using Telegram.Bot.Polling;
 using TelegramBot.Bottons;
 
 namespace TelegramBot.BotService
@@ -12,10 +14,10 @@ namespace TelegramBot.BotService
 
         public Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-           var markup = CreateMarkup.GetAllFood();
-            botClient.SendTextMessageAsync(chatId: update.Message!.Chat.Id.ToString(),
-                                    text: "Bosh Admin sahifasi:",
-                                     replyMarkup: markup);
+            //var markup = createMarkup.GetAllCategory();
+            //botClient.SendTextMessageAsync(chatId: update.Message!.Chat.Id.ToString(),
+            //                        text: "Bosh Admin sahifasi:",
+            //                         replyMarkup: markup);
             return Task.CompletedTask;
         }
     }
